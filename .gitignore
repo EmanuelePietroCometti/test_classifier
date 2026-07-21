@@ -221,3 +221,5 @@ model/
 export/
 src_dataset/
 yolo*
+val_dataset/
+runs/
