@@ -128,7 +128,14 @@ def evaluate_imbalanced_predictions(y_true: np.ndarray, y_pred: np.ndarray, y_sc
     bal_f1 = f1_score(y_true, y_pred, average='macro', zero_division=0)
 
     # Calculate Area Under the Receiver Operating Characteristic Curve
-    auroc = roc_auc_score(y_true, y_scores)
+    n_classes = y_scores.shape[1]
+    auroc = roc_auc_score(
+        y_true,
+        y_scores,
+        multi_class='ovr',
+        average='macro',
+        labels=np.arange(n_classes),
+    )
 
     # Compute Confusion Matrix
     conf_matrix = confusion_matrix(y_true, y_pred)

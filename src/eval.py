@@ -53,16 +53,13 @@ def evaluate(
             probs = result.probs.data.cpu().numpy()
             predicted_class = result.probs.top1
             
-            # Extract probability for the positive class (assuming index 1 is the anomaly)
-            positive_class_score = probs[1] if len(probs) > 1 else 0.0
-            
             y_true.append(label)
             y_pred.append(predicted_class)
-            y_scores.append(positive_class_score)
+            y_scores.append(probs)
             
     y_true_np = np.array(y_true)
     y_pred_np = np.array(y_pred)
-    y_scores_np = np.array(y_scores)
+    y_scores_np = np.vstack(y_scores)  
     
     # Evaluate imbalanced metrics
     metrics = evaluate_imbalanced_predictions(y_true_np, y_pred_np, y_scores_np)
