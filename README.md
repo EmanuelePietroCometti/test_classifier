@@ -96,40 +96,18 @@ Supported extensions: `.bmp`, `.png`, `.jpg`, `.jpeg`, `.tif`, `.tiff`.
 ## Quick start
 
 ```bash
-python main.py \
-    --src_dataset src_dataset \
-    --val_dataset val_dataset \
-    --model yolo26n-cls.pt \
-    --data dataset \
-    --epochs 150 \
-    --imgsz 192 \
-    --batch 64 \
-    --device 0 \
-    --workers 1 \
-    --cache ram \
-    --optimizer MuSGD \
-    --lr0 0.001 \
-    --lrf 0.01 \
-    --cos_lr true \
-    --weight_decay 0.0005 \
-    --warmup_epochs 3.0 \
-    --dropout 0.2 \
-    --patience 30 \
-    --amp false \
-    --seed 42 \
-    --deterministic true \
-    --val true \
-    --plots true \
-    --save true \
-    --save_period 10 \
-    --project runs_pin/classify \
-    --name exp_musgd_lr1e-3_img192 \
-    --exist_ok false
+python main.py --src_dataset src_dataset --val_dataset val_dataset --grayscale true \
+  --model yolo26n-cls.pt --data dataset --epochs 150 --imgsz 224 --batch 64 \
+  --device 0 --workers 1 --cache cache \
+  --optimizer MuSGD --lr0 0.01 --lrf 0.01 --cos_lr true --weight_decay 0.0005 \
+  --warmup_epochs 3.0 --dropout 0.2 --patience 30 --seed 42 --deterministic true \
+  --val true --plots true --save true --save_period 10 \
+  --project runs_pin/classify --name exp_musgd_lr1e-2_gray --exist_ok false
 ```
 
-`--imgsz 192` is the reference configuration for this project. It is not just a
+`--imgsz 224` is the reference configuration for this project. It is not just a
 training detail: it becomes part of the deployment contract, since the C++ caller
-must resize to 192×192 before feeding the exported graph.
+must resize to 224×224 before feeding the exported graph.
 
 Outputs land in `<project>/<name>/`:
 
@@ -278,9 +256,8 @@ Typical invocation for the TensorRT deployment target:
 ```bash
 python export_onnx.py \
     --weights runs/classify/runs_pin/classify/exp_musgd_lr1e-3_img192/weights/best.pt \
-    --imgsz 192 \
-    --static-batch 17 \
-    --input-dtype uint8 \
+    --imgsz 224 \
+    --input-dtype float32 \
     --opset 18 \
     --exporter legacy
 ```

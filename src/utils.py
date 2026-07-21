@@ -13,6 +13,7 @@ from sklearn.metrics import (
 )
 import seaborn as sns
 import matplotlib.pyplot as plt
+from PIL import Image
 
 def split_and_save_image_dataset(
     source_dir: str | Path,
@@ -20,7 +21,8 @@ def split_and_save_image_dataset(
     train_size: float = 0.7,
     val_size: float = 0.2,
     test_size: float = 0.1,
-    random_state: int = 42
+    random_state: int = 42,
+    grayscale: bool = False
 ) -> None:
     """
     Splits an image folder dataset into train, val, and test directories 
@@ -79,7 +81,10 @@ def split_and_save_image_dataset(
         for path, label in zip(paths, cls_labels):
             target_dir = output_path / split_name / label
             target_dir.mkdir(parents=True, exist_ok=True)
-            shutil.copy(path, target_dir / path.name)
+            if grayscale:
+                Image.open(path).convert("L").convert("RGB").save(target_dir / path.name)
+            else:
+                shutil.copy(path, target_dir / path.name)
 
     print(f"Dataset successfully split! Train: {len(X_train)} | Val: {len(X_val)} | Test: {len(X_test)}")
 

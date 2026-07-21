@@ -35,6 +35,8 @@ def get_training_parser():
                         help="Path to source dataset.")
     parser.add_argument('--val_dataset', type=str, default=None, 
                         help="Path to validation dataset.")
+    parser.add_argument('--grayscale', type=str2bool, default=False,
+                    help="Convert dataset images to grayscale (replicated over 3 channels).")
     parser.add_argument('--model', type=str, default=None, 
                         help="Path to pre-trained .pt model or .yaml config file.")
     parser.add_argument('--data', type=str, default=None, 

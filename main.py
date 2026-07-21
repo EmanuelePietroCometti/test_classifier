@@ -18,6 +18,7 @@ def main():
 
     src_dataset = train_args.pop("src_dataset", "src_dataset")
     val_dataset = train_args.pop("val_dataset", "val_dataset")
+    grayscale = train_args.pop("grayscale", False)
     target_dataset = train_args.get("data", "dataset")
 
     # Split the raw dataset into train, validation and test split
@@ -26,7 +27,8 @@ def main():
         target_dataset, 
         train_size=TRAIN_SIZE, 
         val_size=VAL_SIZE, 
-        test_size=TEST_SIZE
+        test_size=TEST_SIZE,
+        grayscale=grayscale
         )
 
     # Train the model
