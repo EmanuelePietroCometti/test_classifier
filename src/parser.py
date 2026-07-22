@@ -96,22 +96,67 @@ def get_training_parser():
                         help="Enable PyTorch 2.x compile (bool or backend mode str).")
 
     # --- Dataset & Augmentation ---
-    parser.add_argument('--single_cls', type=str2bool, default=False, 
+    parser.add_argument('--single_cls', type=str2bool, default=False,
                         help="Treat all classes in a multi-class dataset as a single class.")
-    parser.add_argument('--classes', type=int, nargs='+', default=None, 
+    parser.add_argument('--classes', type=int, nargs='+', default=None,
                         help="List of class IDs to train on (e.g., --classes 0 2 3).")
-    parser.add_argument('--rect', type=str2bool, default=False, 
+    parser.add_argument('--rect', type=str2bool, default=False,
                         help="Enable minimal padding strategy (rectangular training).")
-    parser.add_argument('--multi_scale', type=float, default=0.0, 
+    parser.add_argument('--multi_scale', type=float, default=0.0,
                         help="Randomly vary imgsz for each batch by +/- this ratio.")
-    parser.add_argument('--close_mosaic', type=int, default=10, 
+    parser.add_argument('--close_mosaic', type=int, default=10,
                         help="Disable mosaic data augmentation in the last N epochs.")
-    parser.add_argument('--overlap_mask', type=str2bool, default=True, 
+    parser.add_argument('--overlap_mask', type=str2bool, default=True,
                         help="Merge overlapping object masks into a single mask.")
-    parser.add_argument('--mask_ratio', type=int, default=4, 
+    parser.add_argument('--mask_ratio', type=int, default=4,
                         help="Downsampling ratio for segmentation masks.")
-    parser.add_argument('--dropout', type=float, default=0.0, 
+    parser.add_argument('--dropout', type=float, default=0.0,
                         help="Dropout rate for regularization in classification tasks.")
+
+    # --- Photometric Augmentation ---
+    parser.add_argument('--hsv_h', type=float, default=0.015,
+                        help="Hue jitter fraction. Irrelevant for grayscale inputs.")
+    parser.add_argument('--hsv_s', type=float, default=0.7,
+                        help="Saturation jitter fraction. Irrelevant for grayscale inputs.")
+    parser.add_argument('--hsv_v', type=float, default=0.4,
+                        help="Brightness jitter fraction. Keep low for low-contrast defects.")
+    parser.add_argument('--auto_augment', type=parse_mixed_type, default='randaugment',
+                        help="Auto policy for classification: 'randaugment', 'autoaugment', "
+                             "'augmix', or None. Use None to preserve micro-contrast.")
+
+    # --- Geometric Augmentation ---
+    parser.add_argument('--degrees', type=float, default=0.0,
+                        help="Random rotation range in degrees (+/-).")
+    parser.add_argument('--translate', type=float, default=0.1,
+                        help="Random translation as a fraction of image size (+/-).")
+    parser.add_argument('--scale', type=float, default=0.5,
+                        help="Random scale/crop jitter. For classification maps to "
+                             "RandomResizedCrop(scale=(1-scale, 1.0)).")
+    parser.add_argument('--shear', type=float, default=0.0,
+                        help="Shear angle range in degrees (+/-).")
+    parser.add_argument('--perspective', type=float, default=0.0,
+                        help="Perspective distortion factor (0.0 to 0.001).")
+    parser.add_argument('--flipud', type=float, default=0.0,
+                        help="Probability of vertical flip.")
+    parser.add_argument('--fliplr', type=float, default=0.5,
+                        help="Probability of horizontal flip.")
+    parser.add_argument('--crop_fraction', type=float, default=1.0,
+                        help="Center-crop fraction applied at validation/inference.")
+
+    # --- Occlusion & Mixing Augmentation ---
+    parser.add_argument('--erasing', type=float, default=0.4,
+                        help="Random erasing probability (classification). Set 0.0 when "
+                             "defects occupy a small image fraction.")
+    parser.add_argument('--mixup', type=float, default=0.0,
+                        help="MixUp probability.")
+    parser.add_argument('--cutmix', type=float, default=0.0,
+                        help="CutMix probability.")
+    parser.add_argument('--copy_paste', type=float, default=0.0,
+                        help="Copy-paste probability (segmentation).")
+    parser.add_argument('--copy_paste_mode', type=str, default='flip',
+                        help="Copy-paste strategy: 'flip' or 'mixup'.")
+    parser.add_argument('--bgr', type=float, default=0.0,
+                        help="Probability of BGR channel swap.")
 
     # --- Hyperparameters ---
     parser.add_argument('--freeze', type=parse_mixed_type, default=None, 

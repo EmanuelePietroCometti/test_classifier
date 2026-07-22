@@ -102,7 +102,7 @@ python main.py --src_dataset src_dataset --val_dataset val_dataset --grayscale t
   --optimizer MuSGD --lr0 0.01 --lrf 0.01 --cos_lr true --weight_decay 0.0005 \
   --warmup_epochs 3.0 --dropout 0.2 --patience 30 --seed 42 --deterministic true \
   --val true --plots true --save true --save_period 10 \
-  --project runs_pin/classify --name exp_musgd_lr1e-2_gray --exist_ok false
+  --project catene --name exp_musgd_lr1e-2_gray --exist_ok false
 ```
 
 `--imgsz 224` is the reference configuration for this project. It is not just a
@@ -255,7 +255,7 @@ Typical invocation for the TensorRT deployment target:
 
 ```bash
 python export_onnx.py \
-    --weights runs/classify/runs_pin/classify/exp_musgd_lr1e-3_img192/weights/best.pt \
+    --weights runs/classify/catene/exp_musgd_lr1e-3_img192/weights/best.pt \
     --imgsz 224 \
     --input-dtype float32 \
     --opset 18 \
